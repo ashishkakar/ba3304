@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js">
+  </script>
   <script type="text/javascript">
 
   // Load the Visualization API and the corechart package.
@@ -18,17 +19,25 @@
 </head>
 <body onload="load();">
   <div id="top-container" class="container">
-    <div id="param">
-      <h2>Simulation Parameters</h2>
-      <div class="half">
+    <h1 class="invisible">Assignment 1</h1>
+    <h2 class="menu split4">
+      <span id="insmenu">Instructions</span><br><br>
+      <span id="paramsmenu" class="active">Parameters</span><br><br>
+      <span id="simmenu">Simulation</span><br><br>
+      <span id="summenu" class="remove">Summary</span>
+    </h2>
+    <div id="instructions" class="remove">
+    </div>
+    <div id="parameters">
+      <div class="input half">
         <fieldset class="melt">
           <label for="simp">Simulation Period:</label>
           <input type="text" id="simp" name="simp" value="" placeholder="Time units to simulate" onchange="simp(this);"><br><br>
-          <label for="decoup">Decouple:</label>
-          <input type="checkbox" id="decoup" name="decoup" onchange="decoup(this);">
+          <label for="decoup" class="remove">Decouple:</label>
+          <input type="checkbox" id="decoup" name="decoup" onchange="decoup(this);" class="remove">
         </fieldset>
-        <fieldset>
-          <legend>Manufacturing</legend>
+        <fieldset class="melt">
+          <legend class="remove">Manufacturing</legend>
           <label for="initinv">Initial Inventory:</label>
           <input type="text" id="initinv" name="initinv" value="" placeholder="Starting inventory" onchange="invent(this);"><br><br>
           <label for="mdemand">Mean Demand:</label>
@@ -37,7 +46,7 @@
           <input type="text" id="mcapacity" name="mcapacity" value="" placeholder="Production rate" onchange="mcapacity(this);">
         </fieldset>
         <br>
-        <fieldset>
+        <fieldset class="remove">
           <legend>Service</legend>
           <label for="sdemand">Mean Demand:</label>
           <input type="text" id="sdemand" name="sdemand" value="" placeholder="Mean demand rate" onchange="sdemand(this);"><br><br>
@@ -48,6 +57,35 @@
         <button type="button" id="sim" onclick="simulate(this);" disabled>Simulate</button><br><br>
       </div>
       <hr>
+    </div>
+    <div id="simulation" class="remove">
+      <h2>Simulation</h2>
+      <div class="variables">
+        <div class="split5 tags">
+          <span class="tag">Time</span><br><br>
+          <span class="tag">Demand</span><br><br>
+          <span class="tag">Service Queue</span><br><br>
+          <span class="tag">Manufacturing Queue</span><br>
+          <span class="tag">Inventory</span>
+        </div>
+        <div class="split5 values">
+          <span id="time" class="lgnum">0</span><br><br>
+          <span id="demand" class="lgnum">0</span><br><br>
+          <span id="squeue" class="lgnum">0</span><br><br>
+          <span id="mqueue" class="lgnum">0</span><br><br>
+          <span id="inventory" class="lgnum">0</span>
+        </div>
+        <div class="controls">
+          <button type="button" id="next" onclick="nextdraw(this);" disabled>Next</button>
+          <button type="button" id="end" onclick="enddraw(this);" disabled>Finish</button>
+        </div>
+      </div>
+      <div id="demandchart"></div>
+      <div id="queuechart"></div>
+      <div id="inventorychart"></div>
+      <hr>
+    </div>
+    <div id="summary" class="remove">
     </div>
   </div>
   <!--<h1>This is a Heading</h1>
