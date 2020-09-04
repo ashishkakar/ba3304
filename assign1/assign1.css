@@ -1,3 +1,89 @@
+#top-container {
+  font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
+}
+
 .container {
   width: 800px;
+}
+
+.highlight {
+  background-color: coral;
+}
+
+#param label {
+  font-weight: bold;
+}
+
+.half {
+  width: 400px;
+}
+
+.quarter {
+  width: 200px;
+}
+
+#param input[type="text"] {
+  float: right;
+  width: 169px;
+  padding-left: 2px;
+  padding-right: 2px;
+  border-width: 2px;
+}
+
+#param input.error {
+  border-color: coral;
+}
+
+#param input[type="checkbox"] {
+  float: right;
+  width: 13px;
+  height: 13px;
+  margin-right: 164px;
+}
+
+#param fieldset {
+  padding: 5.6px 12px 10px 12px;
+  border-width: 2px;
+  margin-left: 2px;
+}
+
+#param fieldset.melt {
+  border: none;
+  padding: 7.6px 14px 12px 14px;
+}
+
+/*
+#param button {
+  border-width: 2px;
+  margin-left: 2px;
+}
+*/
+
+/*compromise*/
+#param button {
+  margin-left: 2px;
+}
+
+#param input {
+  border-color: black;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+}
+
+.remove {
+  display: none;
+}
+
+.block {
+  .display: block;
+}
+
+.melt {
+  border: none;
 }

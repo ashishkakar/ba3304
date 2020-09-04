@@ -9,24 +9,48 @@
 
   // Set a callback to run when the Google Visualization API is loaded.
   google.charts.setOnLoadCallback(drawChart);
+  function drawChart(){}
 
-  }
-  </script>
-  <link rel="stylesheet" href="assign1.css">
-  <script src="assign1.js"></script>
-  <title>Assignment 1</title>
+</script>
+<link rel="stylesheet" href="assign1.css">
+<script src="assign1.js"></script>
+<title>Assignment 1</title>
 </head>
-<body>
+<body onload="load();">
   <div id="top-container" class="container">
     <div id="param">
       <h2>Simulation Parameters</h2>
-      <div>
-
+      <div class="half">
+        <fieldset class="melt">
+          <label for="simp">Simulation Period:</label>
+          <input type="text" id="simp" name="simp" value="" placeholder="Time units to simulate" onchange="simp(this);"><br><br>
+          <label for="decoup">Decouple:</label>
+          <input type="checkbox" id="decoup" name="decoup" onchange="decoup(this);">
+        </fieldset>
+        <fieldset>
+          <legend>Manufacturing</legend>
+          <label for="initinv">Initial Inventory:</label>
+          <input type="text" id="initinv" name="initinv" value="" placeholder="Starting inventory" onchange="invent(this);"><br><br>
+          <label for="mdemand">Mean Demand:</label>
+          <input type="text" id="mdemand" name="mdemand" value="" placeholder="Mean demand rate" onchange="mdemand(this);"><br><br>
+          <label for="mcapacity">Capacity:</label>
+          <input type="text" id="mcapacity" name="mcapacity" value="" placeholder="Production rate" onchange="mcapacity(this);">
+        </fieldset>
+        <br>
+        <fieldset>
+          <legend>Service</legend>
+          <label for="sdemand">Mean Demand:</label>
+          <input type="text" id="sdemand" name="sdemand" value="" placeholder="Mean demand rate" onchange="sdemand(this);"><br><br>
+          <label for="scapacity">Capacity:</label>
+          <input type="text" id="scapacity" name="scapacity" value="" placeholder="Service rate" onchange="scapacity(this);">
+        </fieldset>
+        <br>
+        <button type="button" id="sim" onclick="simulate(this);" disabled>Simulate</button><br><br>
       </div>
       <hr>
     </div>
   </div>
-  <h1>This is a Heading</h1>
-  <p>This is a paragraph.</p>
+  <!--<h1>This is a Heading</h1>
+  <p>This is a paragraph.</p>-->
 </body>
 </html>

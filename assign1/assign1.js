@@ -35,12 +35,12 @@ var serv_poisson_cdf = [], serv_next_poisson;
 function init_poisson(manufacturing) {
 	var i=0, lambda, k, pdf, cdf;
 	if(decouple)
-		if(manufacturing)
-			lambda = man_mean_demand;
-		else
-			lambda = serv_mean_demand;
+	if(manufacturing)
+	lambda = man_mean_demand;
 	else
-		lambda = mean_demand;
+	lambda = serv_mean_demand;
+	else
+	lambda = mean_demand;
 	k = Math.floor(lambda);
 	pdf = Math.pow(Math.E, -lambda);
 	cdf = pdf;
@@ -50,13 +50,13 @@ function init_poisson(manufacturing) {
 		cdf += pdf;
 	}
 	if(decouple)
-		if(manufacturing) {
-			man_poisson_pdf = pdf;
-			man_poisson_cdf = cdf;
-		} else {
-			serv_poisson_pdf = pdf;
-			serv_poisson_cdf = cdf;
-		}
+	if(manufacturing) {
+		man_poisson_pdf = pdf;
+		man_poisson_cdf = cdf;
+	} else {
+		serv_poisson_pdf = pdf;
+		serv_poisson_cdf = cdf;
+	}
 	else {
 		poisson_pdf = pdf;
 		poisson_cdf = cdf;
@@ -82,15 +82,15 @@ function get_poisson_k(probability) {
 	if(probability<0 || probability>1) return -1;
 	var k, lambda, pdf, cdf, down=false;
 	if(decouple)
-		if(manufacturing) {
-			lambda = man_mean_demand;
-			pdf = man_poisson_pdf;
-			cdf = man_poisson_cdf;
-		} else {
-			lambda = serv_mean_demand;
-			pdf = serv_poisson_pdf;
-			cdf = serv_poisson_cdf;
-		}
+	if(manufacturing) {
+		lambda = man_mean_demand;
+		pdf = man_poisson_pdf;
+		cdf = man_poisson_cdf;
+	} else {
+		lambda = serv_mean_demand;
+		pdf = serv_poisson_pdf;
+		cdf = serv_poisson_cdf;
+	}
 	else {
 		lambda = mean_demand;
 		pdf = poisson_pdf;
@@ -118,13 +118,13 @@ function generate_rand() {
 	serv_rand = [];
 	var i=0;
 	for(; i<simulation_period; i++)
-		if(decouple)
-			if(manufacturing)
-				man_rand.push(Math.random());
-			else
-				serv_rand.push(Math.random());
-		else
-			rand.push(Math.random());
+	if(decouple)
+	if(manufacturing)
+	man_rand.push(Math.random());
+	else
+	serv_rand.push(Math.random());
+	else
+	rand.push(Math.random());
 }
 
 function generate_demand() {
@@ -133,15 +133,15 @@ function generate_demand() {
 	serv_demand = [];
 	generate_rand();
 	if(decouple)
-		if(manufacturing)
-			for(probability of man_rand)
-				man_demand.push(get_poisson_k(probability, true));
-		else
-			for(probability of serv_rand)
-				serv_demand.push(get_poisson_k(probability, false));
+	if(manufacturing)
+	for(probability of man_rand)
+	man_demand.push(get_poisson_k(probability, true));
 	else
-		for(probability of rand)
-			demand.push(get_poisson_k(probability, false));
+	for(probability of serv_rand)
+	serv_demand.push(get_poisson_k(probability, false));
+	else
+	for(probability of rand)
+	demand.push(get_poisson_k(probability, false));
 }
 
 function generate_service_q() {
@@ -155,18 +155,18 @@ function generate_service_q() {
 		cap = capacity;
 	}
 	if(dem[0] <= cap)
-		service_queue.push(0);
+	service_queue.push(0);
 	else
-		service_queue.push(dem[0]-cap);
+	service_queue.push(dem[0]-cap);
 	for(d of dem) {
 		if(i<=0) {
 			i++;
 			continue;
 		}
 		if(d+service_queue[i-1] <= cap)
-			service_queue.push(0);
+		service_queue.push(0);
 		else
-			service_queue.push(d+service_queue[i-1]-cap);
+		service_queue.push(d+service_queue[i-1]-cap);
 		i++;
 	}
 }
@@ -208,82 +208,96 @@ function generate_manufacturing_q() {
 
 /*HTML functions*/
 
-var sim_button;
-var mdemand_input;
-var sdemand_input;
-var mcapacity_input;
-var scapacity_input;
+var element_keys = ["simp", "decoup", "initinv", "mdemand", "mcapacity", "sdemand", "scapacity", "sim"];
+var elements = {};
+var valid = [];
+
+function param_init() {
+	elements["simp"].value = simulation_period;
+	elements["decoup"].checked = decouple;
+	elements["initinv"].value = initial_inventory;
+	if(decouple) {
+		elements["mdemand"].value = man_mean_demand;
+		elements["mcapacity"].value = man_capacity;
+		elements["sdemand"].value = serv_mean_demand;
+		elements["scapacity"].value = serv_capacity;
+	} else {
+		elements["mdemand"].value = mean_demand;
+		elements["sdemand"].value = mean_demand;
+		elements["mcapacity"].value = capacity;
+		elements["scapacity"].value = capacity;
+	}
+	elements["sim"].disabled = false;
+}
 
 function load() {
-	sim_button = document.getElementById("sim");
-	mdemand_input = document.getElementById("mdemand");
-	sdemand_input = document.getElementById("sdemand");
-	mcapacity_input = document.getElementById("mcapacity");
-	scapacity_input = document.getElementById("scapacity");
+	for(key of element_keys) elements[key] = document.getElementById(key);
+	for(key of element_keys) valid.push(true);
+	param_init();
 }
 
-var valid = [true, true, true, true, true, true];
-
-function bad_input(i) {
-	sim_button.disabled = true;
-	valid[i] = false;
+function bad_input(key) {
+	elements["sim"].disabled = true;
+	valid[element_keys.indexOf(key)] = false;
+	elements[key].classList.toggle("error");
 }
 
-function good_input(i) {
-	valid[i] = true;
+function good_input(key) {
+	valid[element_keys.indexOf(key)] = true;
 	for(v of valid) if(!v) return;
-	sim_button.disabled = false;
+	elements["sim"].disabled = false;
+	elements[key].classList.toggle("error");
 }
 
-function check_whole(x, i) {
+function check_whole(x, key) {
 	var val=0;
 	if(isNaN(x)) {
-		bad_input(i);
+		bad_input(key);
 		return false;
 	}
 	if(Number.isInteger(parseFloat(x))) {
 		val = parseInt(x);
 		if(val >= 0) {
-			good_input(i);
+			good_input(key);
 			return true;
 		}
 	}
-	bad_input(i);
+	bad_input(key);
 	return false;
 }
 
-function check_natural(x, i) {
+function check_natural(x, key) {
 	var val=0;
 	if(isNaN(x)) {
-		bad_input(i);
+		bad_input(key);
 		return false;
 	}
 	if(Number.isInteger(parseFloat(x))) {
 		val = parseInt(x);
 		if(val > 0) {
-			good_input(i);
+			good_input(key);
 			return true;
 		}
 	}
-	bad_input(i);
+	bad_input(key);
 	return false;
 }
 
-function check_floatgt0(x, i) {
+function check_floatgt0(x, key) {
 	if(isNaN(x)) {
-		bad_input(i);
+		bad_input(key);
 		return false;
 	}
 	if(parseFloat(x)>0) {
-		good_input(i);
+		good_input(key);
 		return true;
 	}
-	bad_input(i);
+	bad_input(key);
 	return false;
 }
 
 function simp(x) {
-	if(check_natural(x.value, 0)) simulation_period = parseInt(x.value);
+	if(check_natural(x.value, "simp")) simulation_period = parseInt(x.value);
 }
 
 function decoup(x) {
@@ -292,69 +306,73 @@ function decoup(x) {
 
 function mdemand(x) {
 	var val = 0;
-	if(check_floatgt0(x.value, 1)) {
+	if(check_floatgt0(x.value, "mdemand")) {
 		val = parseFloat(x.value);
 		if(decouple)
-			man_mean_demand = val;
+		man_mean_demand = val;
 		else {
 			mean_demand = val;
 			man_mean_demand = val;
 			serv_mean_demand = val;
-			sdemand_input.value = val;
+			elements["sdemand"].value = val;
+			good_input("sdemand");
 		}
 	}
 }
 
 function mcapacity(x) {
 	var val = 0;
-	if(check_natural(x.value, 2)) {
+	if(check_natural(x.value, "mcapacity")) {
 		val = parseInt(x.value);
 		if(decouple)
-			man_capacity = val;
+		man_capacity = val;
 		else {
 			capacity = val;
 			man_capacity = val;
 			serv_capacity = val;
-			scapacity_input.value = val;
+			elements["scapacity"].value = val;
+			good_input("scapacity");
 		}
 	}
 }
 
 function invent(x) {
-	if(check_whole(x.value, 3)) initial_inventory = parseInt(x.value);
+	if(check_whole(x.value, "initinv")) initial_inventory = parseInt(x.value);
 }
 
 function sdemand(x) {
 	var val = 0;
-	if(check_floatgt0(x.value, 4)) {
+	if(check_floatgt0(x.value, "sdemand")) {
 		val = parseFloat(x.value);
 		if(decouple)
-			serv_mean_demand = val;
+		serv_mean_demand = val;
 		else {
 			mean_demand = val;
 			man_mean_demand = val;
 			serv_mean_demand = val;
-			mdemand_input.value = val;
+			elements["mdemand"].value = val;
+			good_input("mdemand");
 		}
 	}
 }
 
 function scapacity(x) {
 	var val = 0;
-	if(check_natural(x.value, 5)) {
+	if(check_natural(x.value, "scapacity")) {
 		val = parseInt(x.value);
 		if(decouple)
-			serv_capacity = val;
+		serv_capacity = val;
 		else {
 			capacity = val;
 			man_capacity = val;
 			serv_capacity = val;
-			mcapacity_input.value = val;
+			elements["mcapacity"].value = val;
+			good_input("mcapacity");
 		}
 	}
 }
 
-function simulate() {
+function simulate(x) {
 	init();
 	generate_demand();
 	generate_service_q();
